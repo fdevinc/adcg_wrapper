@@ -1,0 +1,42 @@
+include(CMakeFindDependencyMacro)
+
+@PACKAGE_INIT@
+
+# ##############################################################################
+# Core modules.
+# ##############################################################################
+# Eigen.
+find_dependency(Eigen3 3.4.0 REQUIRED NO_MODULE)
+
+# ##############################################################################
+# Optional modules.
+# ##############################################################################
+# spdlog.
+find_dependency(spdlog REQUIRED)
+
+# FiniteDiff.
+find_dependency(FiniteDiff REQUIRED)
+
+# CppAD.
+find_library(CppAD_LIBRARY cppad_lib REQUIRED)
+find_path(CppAD_INCLUDE_DIR cppad/cppad.hpp REQUIRED)
+
+add_library(CppAD SHARED IMPORTED GLOBAL)
+add_library(CppAD::CppAD ALIAS CppAD)
+target_include_directories(CppAD INTERFACE ${CppAD_INCLUDE_DIR})
+
+get_filename_component(CppAD_LIBRARY_NAME ${CppAD_LIBRARY} NAME)
+get_filename_component(CppAD_LIBRARY_REAL_PATH ${CppAD_LIBRARY} REALPATH)
+
+set_target_properties(CppAD PROPERTIES IMPORTED_SONAME ${CppAD_LIBRARY_NAME})
+set_target_properties(CppAD PROPERTIES IMPORTED_LOCATION
+                                       ${CppAD_LIBRARY_REAL_PATH})
+
+# CppADCodeGen.
+find_path(CppADCodeGen_INCLUDE_DIR cppad/cg.hpp REQUIRED)
+
+add_library(CppADCodeGen INTERFACE IMPORTED GLOBAL)
+add_library(CppADCodeGen::CppADCodeGen ALIAS CppADCodeGen)
+target_include_directories(CppADCodeGen INTERFACE ${CppADCodeGen_INCLUDE_DIR})
+
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
