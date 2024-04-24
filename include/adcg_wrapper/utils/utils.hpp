@@ -33,6 +33,7 @@
 
 #include "adcg_wrapper/assert.hpp"
 #include "adcg_wrapper/data_types.hpp"
+#include "adcg_wrapper/io/logging.hpp"
 
 #include "adcg_wrapper/autodiff/support/quaternion.hpp"
 
